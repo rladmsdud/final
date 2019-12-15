@@ -1,0 +1,75 @@
+#화폐분석을 하려고 하였으나 주제를 변경함
+#주제 : 네이버 TV top 4~100 분석
+
+#명렁프롬프트에서 실행
+cd C:\scraping
+java -Dwebdriver.gecko.driver="geckodriver.exe" -jar selenium-server-standalone-3.9.1.jar –port 4444
+
+install.packages("RSelenium")
+install.packages("rvest")
+install.packages("lubridata")   #날짜 클렌징 패키지
+install.packages("httr")     #크롤링에 필요한 패키지
+install.packages("xts")
+library(RSelenium)
+library(rvest)
+library(lubridate)
+library(httr)
+library(rvest)
+library(xts)
+require(lubridate)    #날짜를 다루는 패키지
+
+remDr <- remoteDriver(remoteServerAddr = 'localhost', 
+                      port = 4444L, # 포트번호 입력 
+                      browserName = "chrome") 
+
+remDr$open() 
+
+remDr$navigate("http://www.google.com")
+remDr$navigate("https://tv.naver.com/r/")
+
+
+url = "https://tv.naver.com/r/"
+html <- read_html(url)
+html
+table <- html%>% html_nodes("div.top_flick div.inner a")
+
+#채널명
+chn <- html%>%html_nodes("div.cds div.cds_type dd.chn > a")
+channel <- chn %>% html_text()
+
+#재생 수 추출
+hit <- html%>%html_nodes("div.cds div.cds_type span.hit")
+hit1 <- hit %>% html_text()
+hit2 <- gsub("재생 수","",hit1)
+hit3 <- gsub(",","",hit2)
+
+#좋아요 수 추출
+like <- html%>%html_nodes("div.cds div.cds_type span.like")
+like1 <- like %>% html_text()
+like2 <- gsub("좋아요 수", "", like1)
+like3 <- gsub(",","",like2)
+
+#데이터 추출
+top_top_data=as.data.frame(cbind(channel,hit3,like3))
+top_top_data
+
+#프로그램에 따른 재생수
+top_top_data_1 = as.data.frame(cbind(channel,hit2)
+
+#프로그램에 따른 좋아요 수
+top_top_data_2 = as.data.frame(cbind(channel,like2))
+
+date <- Sys.Date()   #오늘 날짜
+
+#시간 자동적으로 구축
+install.packages("taskscheduleR")
+library(taskscheduleR)
+setwd("C:/test")
+telegram.schedule = file.path('C:/test/final')
+taskscheduler_create(taskname = "naver_TV", rscript = "C:/test/final",schedule = "MINUTE", starttime = format(Sys.time() +60,'%H:%M'),startdate = format(Sys.Date(), "%Y/%m/%d"),modifier = 30)
+
+write.csv(top_top_data,file = "top_top_data1")
+
+#막대그래프
+chart_data <- c(title)
+names(chart_data) <- c("음악","예능","뉴스","드라마","기타")
