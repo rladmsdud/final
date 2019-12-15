@@ -70,6 +70,28 @@ taskscheduler_create(taskname = "naver_TV", rscript = "C:/test/final",schedule =
 
 write.csv(top_top_data,file = "top_top_data1")
 
-#막대그래프
+file.name <- paste0(channel,hit2,like2)
+write_xml(html, html = file.name[i])
+write_xml
+
+extract = function(file) {
+   html <- read_html(file)
+   able <- html %>% html_nodes("table")
+   table <- html %>% html_nodes("table")
+   title <- html%>% html_nodes("dt.title strong.tit")
+   chn <- html%>%html_nodes("div.cds div.cds_type dd.chn > a")
+   channel <- chn %>% html_text()
+   hit <- html%>%html_nodes("div.cds div.cds_type span.hit")
+   hit1 <- hit %>% html_text()
+   ike <- html%>%html_nodes("div.cds div.cds_type span.like")
+   like1 <- like %>% html_text()
+   top_data=as.data.frame(cbind(channel, hit1, like1))
+   top_data
+   link <- html %>% html_nodes("a.hover-link")
+   }
+   
+remDr$close() 
+
+#그래프
 chart_data <- c(title)
 names(chart_data) <- c("음악","예능","뉴스","드라마","기타")
